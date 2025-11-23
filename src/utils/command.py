@@ -3,8 +3,10 @@ import re
 import shutil
 from dotenv import load_dotenv
 import os
+from utils.genai_client import GenaiClient
 
 load_dotenv()
+genai = GenaiClient()
 
 class CommandVoice:
     def __init__(self):
@@ -30,7 +32,10 @@ class CommandVoice:
                     if self.text == 'cerrar': 
                         break
                     
-                    if self.text == 'sleep': 
+                    elif 'rubí' in self.text.lower():
+                        genai.generate_response(self.text)
+
+                    elif self.text == 'sleep': 
                         os.system('shutdown /s /t 3')
                     
                     elif self.text.startswith('Open') or self.text.startswith('open'):
