@@ -1,7 +1,10 @@
 import speech_recognition as sr
-import subprocess
 import re 
 import shutil
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 class CommandVoice:
     def __init__(self):
@@ -14,12 +17,21 @@ class CommandVoice:
             print('Puedes hablar')
             while True:
                 print('-------------------')
+                self.r.adjust_for_ambient_noise(source)
                 audio = self.r.listen(source)
 
                 try:
-                    self.text = self.r.recognize_google(audio, language="es-ES")
+                    self.text = self.r.recognize_google(
+                        audio,
+                        language="es-ES"
+                    )
+                    
                     print(self.text)
-                    if self.text == 'cerrar': break
+                    if self.text == 'cerrar': 
+                        break
+                    
+                    if self.text == 'sleep': 
+                        os.system('shutdown /s /t 3')
                     
                     elif self.text.startswith('Open') or self.text.startswith('open'):
                         file_name = re.sub("open ", "", self.text.lower())
@@ -32,15 +44,17 @@ class CommandVoice:
                     print('Hubo un error: ', e)
     
     def open_file(self, name):
-         file_path = shutil.which(name)
-         print(name)
-         if file_path:
-            print("file_path")
-            subprocess.run([
-                "powershell",
-                "Start-Process",
-                r"'{}'".format(file_path),
-                "-Verb RunAs"
-            ])
-         else: print('No se encontro la ruta del archivo')
+         for key, value in os.environ.items():
+             if name.upper() == key:
+                 os.startfile(value)
+                 
+             if name == 'all':
+                for key, value in os.environ.items():
+                 os.startfile(value)
     
+         file_path = shutil.which(name)
+
+         if file_path:
+            print(file_path)
+            os.startfile(file_path)
+         else: print('No se encontro la ruta del archivo')
