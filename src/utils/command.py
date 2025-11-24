@@ -33,10 +33,7 @@ class CommandVoice:
                         break
                     
                     elif 'rubí' in self.text.lower():
-                        genai.generate_response(self.text)
-
-                    elif self.text == 'sleep': 
-                        os.system('shutdown /s /t 3')
+                        genai.classify_prompts(self.text)
                     
                     elif self.text.startswith('Open') or self.text.startswith('open'):
                         file_name = re.sub("open ", "", self.text.lower())
