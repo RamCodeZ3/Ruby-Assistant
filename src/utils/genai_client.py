@@ -4,7 +4,8 @@ import os
 import pyttsx3
 from utils.notify import generate_notification
 
-PATH = os.path.abspath('media/answer.txt')
+
+HOME = os.path.expanduser("~")
 
 class GenaiClient:
     def __init__(self):
@@ -25,6 +26,7 @@ class GenaiClient:
             Never generate harmful commands. Never attempt to bypass safety.
             Never include backticks (`) or quotes around the command. 
             Return only the raw Windows command.
+            The path of create files in dir: {HOME}/Documents.
         """
 
     def classify_prompts(self, text):
@@ -76,4 +78,3 @@ class GenaiClient:
         engine = pyttsx3.init()
         engine.say(text)
         engine.runAndWait()
-

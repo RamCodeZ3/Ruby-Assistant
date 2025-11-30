@@ -4,14 +4,20 @@ import shutil
 from dotenv import load_dotenv
 import os
 from utils.genai_client import GenaiClient
+from utils.notify import generate_notification
+
 
 load_dotenv()
 genai = GenaiClient()
+HOME = os.path.expanduser("~")
+
 
 class CommandVoice:
     def __init__(self):
         self.r = sr.Recognizer()
+        self.r.pause_threshold = 1.0
         self.text = None
+        self.mode_write = True
         self.listenVoice()
 
     def listenVoice(self):
@@ -28,9 +34,10 @@ class CommandVoice:
                         language="es-ES"
                     )
                     
-                    print(self.text)
-                    if self.text == 'cerrar': 
-                        break
+                    print(self.text) # debug
+
+                    if self.mode_write:
+                        self.write_note(self.text)
                     
                     elif 'rubí' in self.text.lower():
                         genai.classify_prompts(self.text)
@@ -49,10 +56,6 @@ class CommandVoice:
          for key, value in os.environ.items():
              if name.upper() == key:
                  os.startfile(value)
-                 
-             if name == 'all':
-                for key, value in os.environ.items():
-                 os.startfile(value)
     
          file_path = shutil.which(name)
 
@@ -60,3 +63,13 @@ class CommandVoice:
             print(file_path)
             os.startfile(file_path)
          else: print('No se encontro la ruta del archivo')
+    
+    def write_note(self, text):
+        count = 1
+        
+        for filename in os.listdir(f'{HOME}/Documents'):
+            if re.search(r'note_\d.txt', filename):
+                count += 1
+
+        with open(F'{HOME}/Documents/note_{count}.txt', 'a') as file:
+            file.write(f'{text} ')
