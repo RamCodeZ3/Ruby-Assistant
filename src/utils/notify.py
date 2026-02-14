@@ -1,9 +1,11 @@
 import subprocess
 
+
 def generate_notification(title, notification):
     try:
         script = rf'''
-            [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType=WindowsRuntime] > $null
+            [Windows.UI.Notifications.ToastNotificationManager,
+            Windows.UI.Notifications, ContentType=WindowsRuntime] > $null
             $template = [Windows.UI.Notifications.ToastNotificationManager]::GetTemplateContent([Windows.UI.Notifications.ToastTemplateType]::ToastText01)
             $template.GetElementsByTagName("text")[0].AppendChild($template.CreateTextNode("{notification}")) > $null
             $toast = [Windows.UI.Notifications.ToastNotification]::new($template)
@@ -18,5 +20,5 @@ def generate_notification(title, notification):
             '-Command', script
         ])
     
-    except Exception:
-        print('Hubo un error enviando la notificacion')
+    except Exception as e:
+        print('Hubo un error enviando la notificacion {}'.format(e))

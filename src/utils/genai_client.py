@@ -16,8 +16,10 @@ class GenaiClient:
             The command should perform safe actions such as shutting down the PC,
             copying files, moving files, or creating folders.
 
-            If the instruction attempts to perform any harmful, dangerous, or destructive action — 
-            such as modifying, deleting, or accessing critical system files or directories 
+            If the instruction attempts to perform any harmful, dangerous,
+            or destructive action — 
+            such as modifying, deleting, or accessing critical system 
+            files or directories
             (e.g., System32, Windows folders, Program Files, drivers, registry files) —
             you must NOT execute it.
 
@@ -69,7 +71,10 @@ class GenaiClient:
             contents=f'{content}'
         )
         if response.text == 'Impossible':
-            generate_notification('Error', 'La ultima orden no se puede ejecutar.')
+            generate_notification(
+                'Error',
+                'La ultima orden no se puede ejecutar.'
+            )
         
         else: 
             os.system(response.text)
